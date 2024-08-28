@@ -70,7 +70,6 @@ def grab_transcripts(config_json = "config.txt"):
                 except Exception as e:
                     print("no transcript available")
                     failed_episodes[episode] = show[episode]
-                    show.remove(episode)
                     continue
 
             episode_transcript = WebDriverWait(driver, 100).until(EC.presence_of_all_elements_located((By.XPATH, "//div[@data-testid='root']")))
@@ -93,13 +92,19 @@ def grab_transcripts(config_json = "config.txt"):
                 text_file.write(string)
                 
             finished_episodes[episode] = show[episode]
-            show.remove(episode)
             
         t.sleep(20)
 
     driver.implicitly_wait(10)
 
     driver.quit()
+
+    for episode in finished_episodes.keys():
+        show.pop(episode)
+
+    for episode in failed_episodes.keys():
+        show.pop(episode)
+
     with open('failed_episodes.txt', 'w', encoding='utf-8') as f:
         json.dump(failed_episodes, f, ensure_ascii=False, indent=2)
     with open(config_dict["show_json"], 'w', encoding='utf-8') as f:

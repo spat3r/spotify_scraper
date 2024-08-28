@@ -11,6 +11,7 @@ def main():
     configuration["username"] = "username"
     configuration["password"] = "password"
     configuration["show_json"] = "show.txt"
+    configuration["show_tag"] = "episode"
     configuration["show_url"] = "https://open.spotify.com/show/6VaJwyS2KXxiXqR77jqzmP"
 
     with open('config.txt', 'w', encoding='utf-8') as f:

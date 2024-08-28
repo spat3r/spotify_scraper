@@ -43,7 +43,7 @@ def grab_episodelist(config_json = "config.txt"):
     href_results = show_soup.find_all(href=re.compile("episode"))
 
     for episode in href_results:
-        episode_tag = f"episode_{episode_count}"
+        episode_tag = config_dict["show_tag"]+f"_{episode_count}"
         episode_list[episode_tag] = {}
         episode_list[episode_tag]["tag"] = episode_tag
         episode_list[episode_tag]["title"] = episode.text
