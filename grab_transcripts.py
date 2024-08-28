@@ -47,7 +47,7 @@ def grab_transcripts(config_json = "config.txt"):
     # read list of 
     with open(config_dict["show_json"], "r", encoding='utf-8') as f:
         show = json.load(f)
-    
+
     for episode in show.keys():
         with open(f"export/{show[episode]['tag']}.md", "w", encoding="utf-8") as text_file:
             text_file.write(f"# {show[episode]['title']}\n")
@@ -73,26 +73,26 @@ def grab_transcripts(config_json = "config.txt"):
                     continue
 
             episode_transcript = WebDriverWait(driver, 100).until(EC.presence_of_all_elements_located((By.XPATH, "//div[@data-testid='root']")))
-            
+
             for WebElement in episode_transcript:
                 elementSoup = BeautifulSoup(WebElement.get_attribute('innerHTML'),'html.parser')
                 episode_htmls = elementSoup.select('div.l6peddfW1BiAnd1a_mF3')
-            
+
             for div in episode_htmls:
                 string = "\n"
                 # Get timestamp from button
                 time_tag = div.find('button', class_='OexEjZt7Kf7pFUW701v8')
                 if time_tag:
                     string += f"\n\n[{time_tag.get_text(strip=True)}]\n\n"
-                
+
                 # Grap text from the spans
                 for text_content in div.find_all('span', class_='F3BJWbXwGSqNOwZHInLz'):
                     string += f"{text_content.get_text(strip=True)} "
-                
+
                 text_file.write(string)
-                
+
             finished_episodes[episode] = show[episode]
-            
+
         t.sleep(20)
 
     driver.implicitly_wait(10)
@@ -105,11 +105,12 @@ def grab_transcripts(config_json = "config.txt"):
     for episode in failed_episodes.keys():
         show.pop(episode)
 
-    with open('failed_episodes.txt', 'w', encoding='utf-8') as f:
+
+    with open(f'export/{config_dict["show_tag"]}_failed_episodes.txt', 'w', encoding='utf-8') as f:
         json.dump(failed_episodes, f, ensure_ascii=False, indent=2)
     with open(config_dict["show_json"], 'w', encoding='utf-8') as f:
         json.dump(show, f, ensure_ascii=False, indent=2)
-    with open('finished_episodes.txt', 'w', encoding='utf-8') as f:
+    with open(f'export/{config_dict["show_tag"]}_finished_episodes.txt', 'w', encoding='utf-8') as f:
         json.dump(finished_episodes, f, ensure_ascii=False, indent=2)
 
 
