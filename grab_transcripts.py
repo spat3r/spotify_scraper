@@ -58,20 +58,14 @@ def grab_transcripts(config_json = "config.txt"):
             text_file.write("## Notes:\n\n## Transcript:")
 
             driver.get(show[episode]["href"])
-            driver.implicitly_wait(30)
 
             try:
-                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[contains(., 'Transcript')]"))))
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until( EC.element_to_be_clickable((By.XPATH, "//a[contains(., 'Transcript')]"))))
             except Exception as e:
-                print("transcripts couldnt be loaded on the first time")
-                try:
-                    driver.implicitly_wait(30)
-                    driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[contains(., 'Transcript')]"))))
-                except Exception as e:
-                    print("no transcript available")
-                    failed_episodes[episode] = show[episode]
-                    continue
+                failed_episodes[episode] = show[episode]
+                continue
 
+            WebDriverWait(driver, 100).until(EC.presence_of_all_elements_located((By.XPATH, "//span[contains(., 'This transcript was generated automatically. Its accuracy may vary.')]")))
             episode_transcript = WebDriverWait(driver, 100).until(EC.presence_of_all_elements_located((By.XPATH, "//div[@data-testid='root']")))
 
             for WebElement in episode_transcript:
@@ -92,8 +86,6 @@ def grab_transcripts(config_json = "config.txt"):
                 text_file.write(string)
 
             finished_episodes[episode] = show[episode]
-
-        t.sleep(20)
 
     driver.implicitly_wait(10)
 

@@ -23,7 +23,7 @@ def grab_episodelist(config_json = "config.txt"):
     # driver.maximize_window()
 
     try:
-        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))).click()
+        WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))).click()
         print("accepted cookies")
     except Exception as e:
         print('no cookie button')
